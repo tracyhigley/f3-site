@@ -13,7 +13,13 @@ export default async function Scorecard() {
 
   const stats = {};
   people.forEach((p) => {
-    stats[p.id] = { name: p.name, attendance: 0, qCount: 0 };
+    // Start from each pax's carried-over totals (posts/Qs logged before this
+    // site existed), then add on whatever's tallied from recaps below.
+    stats[p.id] = {
+      name: p.name,
+      attendance: p.previous_posts || 0,
+      qCount: p.previous_qs || 0,
+    };
   });
 
   recaps.forEach((r) => {
