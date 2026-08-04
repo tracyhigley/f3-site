@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { getRecapsWithNames } from '../../lib/data';
 import RecapCard from '../../components/RecapCard';
 
@@ -9,9 +10,14 @@ export default async function BackblastArchive() {
 
   return (
     <main className="container">
-      <h1>Backblast Archive</h1>
+      <p className="page-eyebrow">The Grill</p>
+      <h1 className="page-title">Backblast Archive</h1>
 
-      {older.length === 0 && <p>No older backblasts yet — check the home page for the latest ones.</p>}
+      {older.length === 0 && (
+        <p className="empty-state">
+          No older backblasts yet — check <Link href="/recent-backblasts">Recent Backblasts</Link> for the latest ones.
+        </p>
+      )}
 
       {older.map((r) => (
         <RecapCard key={r.id} recap={r} peopleMap={peopleMap} />
