@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic';
 // TODO: update this each month when you announce the next Fire.
 // RSVPs are tied to this exact value — changing it automatically starts
 // a fresh RSVP list for the new date without deleting old ones.
-const CURRENT_FIRE_DATE = '[Add date]';
+const CURRENT_FIRE_DATE = 'Sept 14, 2026';
 
 export default async function Fire() {
   const { data: rsvps } = await supabase
@@ -43,11 +43,11 @@ export default async function Fire() {
           </div>
           <div className="fire-detail">
             <span className="fire-detail-label">Time</span>
-            <span className="fire-detail-value">[Add time]</span>
+            <span className="fire-detail-value">6:00 PM</span>
           </div>
           <div className="fire-detail">
             <span className="fire-detail-label">Location</span>
-            <span className="fire-detail-value">[Add location]</span>
+            <span className="fire-detail-value">TBD</span>
           </div>
         </div>
 
