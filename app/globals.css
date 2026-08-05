@@ -840,6 +840,28 @@ button:disabled {
   font-size: 0.9rem;
 }
 
+.rsvp-remove {
+  margin-left: auto;
+  border: none;
+  background: none;
+  color: #c0392b;
+  font-size: 1.2rem;
+  line-height: 1;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.rsvp-remove:hover {
+  background: rgba(192, 57, 43, 0.12);
+}
+
+.rsvp-remove:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
 .rsvp-form {
   display: flex;
   flex-direction: column;
