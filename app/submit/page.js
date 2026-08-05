@@ -150,104 +150,113 @@ export default function SubmitRecap() {
 
   return (
     <main className="container">
-      <h1>Submit a Backblast</h1>
+      <p className="page-eyebrow">The Grill</p>
+      <h1 className="page-title">Submit a Backblast</h1>
 
       {error && <p className="error">{error}</p>}
       {success && (
         <p className="success">
-          Backblast received! It&apos;s live on the <a href="/">home page</a> now.
+          Backblast received! It&apos;s live on <a href="/recent-backblasts">Recent Backblasts</a> now.
         </p>
       )}
 
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>Title</label>
-          <input type="text" value={form.title} onChange={(e) => update('title', e.target.value)} />
+        <div className="card form-card">
+          <h2>Recap Details</h2>
+
+          <div>
+            <label>Title</label>
+            <input type="text" value={form.title} onChange={(e) => update('title', e.target.value)} />
+          </div>
+
+          <div>
+            <label>Date</label>
+            <input type="date" value={form.date} onChange={(e) => update('date', e.target.value)} />
+          </div>
+
+          <div>
+            <label>The Q</label>
+            <select value={form.qId} onChange={(e) => update('qId', e.target.value)}>
+              <option value="">Select...</option>
+              {people.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label>PAX</label>
+            <MultiSelect
+              options={people.map((p) => ({ id: String(p.id), name: p.name }))}
+              selected={form.paxIds}
+              onChange={(ids) => update('paxIds', ids)}
+              placeholder="Select PAX..."
+            />
+          </div>
+
+          <div>
+            <label>
+              FNGs <span className="hint">(comma-separated — new names get added automatically for next time)</span>
+            </label>
+            <p className="hint-line">Add the F3 name followed by real name in parentheses</p>
+            <input type="text" value={form.fngs} onChange={(e) => update('fngs', e.target.value)} placeholder="e.g., Sprinkles (John DoeNut)" />
+          </div>
+
+          <div>
+            <label>Add Photo (the boyband!)</label>
+            <input type="file" accept="image/*" onChange={handlePhotoChange} ref={fileInputRef} />
+            {photoPreview && (
+              <div>
+                <img className="preview" src={photoPreview} alt="preview" />
+                <button type="button" className="remove-photo" onClick={handleRemovePhoto}>
+                  Remove photo
+                </button>
+              </div>
+            )}
+          </div>
         </div>
 
-        <div>
-          <label>Date</label>
-          <input type="date" value={form.date} onChange={(e) => update('date', e.target.value)} />
+        <div className="card form-card">
+          <h2 className="beatdown-heading">Beatdown</h2>
+
+          <div>
+            <label>Quick description of the beatdown, or a fun story or comment</label>
+            <textarea value={form.intro} onChange={(e) => update('intro', e.target.value)} />
+          </div>
+
+          <div>
+            <label>Warmup</label>
+            <textarea value={form.warmup} onChange={(e) => update('warmup', e.target.value)} />
+          </div>
+
+          <div>
+            <label>The Thang</label>
+            <textarea value={form.thang} onChange={(e) => update('thang', e.target.value)} />
+          </div>
+
+          <div>
+            <label>Mary</label>
+            <textarea value={form.mary} onChange={(e) => update('mary', e.target.value)} />
+          </div>
+
+          <div>
+            <label>Announcements</label>
+            <textarea value={form.announcements} onChange={(e) => update('announcements', e.target.value)} />
+          </div>
+
+          <div>
+            <label>COT</label>
+            <textarea value={form.cot} onChange={(e) => update('cot', e.target.value)} />
+          </div>
         </div>
 
-        <div>
-          <label>The Q</label>
-          <select value={form.qId} onChange={(e) => update('qId', e.target.value)}>
-            <option value="">Select...</option>
-            {people.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.name}
-              </option>
-            ))}
-          </select>
+        <div className="form-submit">
+          <button type="submit" className="btn btn-primary" disabled={submitting}>
+            {submitting ? 'Submitting...' : 'Submit Backblast'}
+          </button>
         </div>
-
-        <div>
-          <label>PAX</label>
-          <MultiSelect
-            options={people.map((p) => ({ id: String(p.id), name: p.name }))}
-            selected={form.paxIds}
-            onChange={(ids) => update('paxIds', ids)}
-            placeholder="Select PAX..."
-          />
-        </div>
-
-        <div>
-          <label>
-            FNGs <span className="hint">(comma-separated — new names get added automatically for next time)</span>
-          </label>
-          <p className="hint-line">Add the F3 name followed by real name in parentheses</p>
-          <input type="text" value={form.fngs} onChange={(e) => update('fngs', e.target.value)} placeholder="e.g., Sprinkles (John DoeNut)" />
-        </div>
-
-        <div>
-          <label>Add Photo (the boyband!)</label>
-          <input type="file" accept="image/*" onChange={handlePhotoChange} ref={fileInputRef} />
-          {photoPreview && (
-            <div>
-              <img className="preview" src={photoPreview} alt="preview" />
-              <button type="button" className="remove-photo" onClick={handleRemovePhoto}>
-                Remove photo
-              </button>
-            </div>
-          )}
-        </div>
-
-        <h2 className="beatdown-heading">Beatdown</h2>
-
-        <div>
-          <label>Quick description of the beatdown, or a fun story or comment</label>
-          <textarea value={form.intro} onChange={(e) => update('intro', e.target.value)} />
-        </div>
-
-        <div>
-          <label>Warmup</label>
-          <textarea value={form.warmup} onChange={(e) => update('warmup', e.target.value)} />
-        </div>
-
-        <div>
-          <label>The Thang</label>
-          <textarea value={form.thang} onChange={(e) => update('thang', e.target.value)} />
-        </div>
-
-        <div>
-          <label>Mary</label>
-          <textarea value={form.mary} onChange={(e) => update('mary', e.target.value)} />
-        </div>
-
-        <div>
-          <label>Announcements</label>
-          <textarea value={form.announcements} onChange={(e) => update('announcements', e.target.value)} />
-        </div>
-
-        <div>
-          <label>COT</label>
-          <textarea value={form.cot} onChange={(e) => update('cot', e.target.value)} />
-        </div>
-
-        <button type="submit" disabled={submitting}>
-          {submitting ? 'Posting...' : 'Post Recap'}
-        </button>
       </form>
     </main>
   );
