@@ -21,22 +21,29 @@ function nickname(name) {
 }
 
 export default function RecapCard({ recap: r, peopleMap }) {
+  const paxNames = (r.pax_ids || []).map((id) => peopleMap[id]).filter(Boolean);
+
   return (
     <article className="card">
       <h2>{r.title}</h2>
       <p className="meta">
-        {formatDate(r.date)} · Q: {nickname(peopleMap[r.q_id]) || 'Unknown'}
+        {formatDate(r.date)}
+        <span className="meta-dot">•</span>
+        Q <span className="q-badge">{nickname(peopleMap[r.q_id]) || 'Unknown'}</span>
       </p>
 
       {r.photo_url && <img className="photo" src={r.photo_url} alt={r.title} />}
 
-      <p>
-        <strong>PAX:</strong>{' '}
-        {(r.pax_ids || [])
-          .map((id) => peopleMap[id])
-          .filter(Boolean)
-          .join(', ') || '—'}
-      </p>
+      <p className="pax-label">PAX</p>
+      <div className="pax-list">
+        {paxNames.length > 0 ? (
+          paxNames.map((name, i) => (
+            <span className="pax-pill" key={`${name}-${i}`}>{nickname(name)}</span>
+          ))
+        ) : (
+          <span className="pax-pill">—</span>
+        )}
+      </div>
 
       {r.fngs && (
         <p>

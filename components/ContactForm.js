@@ -59,7 +59,7 @@ export default function ContactForm() {
         <textarea required value={form.message} onChange={(e) => update('message', e.target.value)} />
       </div>
 
-      <button type="submit" disabled={status === 'sending'}>
+      <button type="submit" className="btn btn-primary" disabled={status === 'sending'}>
         {status === 'sending' ? 'Sending...' : 'Send Message'}
       </button>
     </form>
