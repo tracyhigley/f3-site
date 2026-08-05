@@ -9,6 +9,7 @@ export default function FireRsvp({ fireDate, initialRsvps }) {
   const [bringing, setBringing] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
+  const [removingId, setRemovingId] = useState(null);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -38,6 +39,20 @@ export default function FireRsvp({ fireDate, initialRsvps }) {
     }
   }
 
+  async function handleRemove(id) {
+    setError(null);
+    setRemovingId(id);
+    try {
+      const { error: deleteError } = await supabase.from('fire_rsvps').delete().eq('id', id);
+      if (deleteError) throw deleteError;
+      setRsvps((prev) => prev.filter((r) => r.id !== id));
+    } catch (err) {
+      setError(err.message || 'Could not remove that RSVP. Try again.');
+    } finally {
+      setRemovingId(null);
+    }
+  }
+
   return (
     <div className="rsvp-section">
       <h2 className="rsvp-heading">
@@ -52,6 +67,16 @@ export default function FireRsvp({ fireDate, initialRsvps }) {
             <li key={r.id} className="rsvp-item">
               <span className="rsvp-name">{r.name}</span>
               {r.bringing && <span className="rsvp-bringing">bringing {r.bringing}</span>}
+              <button
+                type="button"
+                className="rsvp-remove"
+                onClick={() => handleRemove(r.id)}
+                disabled={removingId === r.id}
+                aria-label={`Remove ${r.name}`}
+                title="Remove"
+              >
+                &times;
+              </button>
             </li>
           ))}
         </ul>
