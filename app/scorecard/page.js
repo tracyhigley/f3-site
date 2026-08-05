@@ -32,14 +32,17 @@ export default async function Scorecard() {
     if (r.q_id && stats[r.q_id]) stats[r.q_id].qCount += 1;
   });
 
-  const rows = Object.values(stats).sort((a, b) => a.name.localeCompare(b.name));
+  const rows = Object.values(stats).sort(
+    (a, b) => b.attendance - a.attendance || a.name.localeCompare(b.name)
+  );
 
   return (
     <main className="container">
-      <h1>Posts &amp; Qs Scorecard</h1>
+      <p className="page-eyebrow">The Grill</p>
+      <h1 className="page-title">Posts &amp; Qs Scorecard</h1>
 
       {rows.length === 0 ? (
-        <p>No one in the system yet.</p>
+        <p className="empty-state">No one in the system yet.</p>
       ) : (
         <table className="scorecard">
           <thead>
@@ -50,13 +53,23 @@ export default async function Scorecard() {
             </tr>
           </thead>
           <tbody>
-            {rows.map((r) => (
-              <tr key={r.name}>
-                <td>{nickname(r.name)}</td>
-                <td>{r.attendance}</td>
-                <td>{r.qCount}</td>
-              </tr>
-            ))}
+            {rows.map((r) => {
+              const milestone = r.attendance >= 50;
+              return (
+                <tr key={r.name} className={milestone ? 'milestone-row' : undefined}>
+                  <td>{nickname(r.name)}</td>
+                  <td>
+                    <span className={milestone ? 'posts-count milestone' : 'posts-count'}>
+                      {r.attendance}
+                    </span>
+                    {milestone && <span className="milestone-badge">50+</span>}
+                  </td>
+                  <td>
+                    <span className="qcount-badge">{r.qCount}</span>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       )}
