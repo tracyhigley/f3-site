@@ -32,8 +32,8 @@ export default async function Scorecard() {
     if (r.q_id && stats[r.q_id]) stats[r.q_id].qCount += 1;
   });
 
-  const rows = Object.values(stats).sort(
-    (a, b) => b.attendance - a.attendance || a.name.localeCompare(b.name)
+  const rows = Object.values(stats).sort((a, b) =>
+    nickname(a.name).localeCompare(nickname(b.name))
   );
 
   return (
