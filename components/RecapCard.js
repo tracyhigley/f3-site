@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 function Section({ label, text }) {
   if (!text) return null;
   return (
@@ -20,13 +22,20 @@ function nickname(name) {
   return name.replace(/\s*\([^)]*\)\s*$/, '');
 }
 
-export default function RecapCard({ recap: r, peopleMap }) {
+export default function RecapCard({ recap: r, peopleMap, editable = false }) {
   const paxNames = (r.pax_ids || []).map((id) => peopleMap[id]).filter(Boolean);
 
   return (
     <article className="card">
-      <h2>{r.title}</h2>
-      <p className="meta">
+<div className="card-header-row">
+    <h2>{r.title}</h2>
+  {editable && (
+    <Link href={`/edit/${r.id}`} className="edit-link">
+    Edit
+    </Link>
+    )}
+</div>
+  <p className="meta">
         {formatDate(r.date)}
         <span className="meta-dot">•</span>
         Q <span className="q-badge">{nickname(peopleMap[r.q_id]) || 'Unknown'}</span>
