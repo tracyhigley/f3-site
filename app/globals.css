@@ -169,6 +169,11 @@ h2 {
   white-space: pre-wrap;
 }
 
+.intro-text {
+  margin: 10px 0 0;
+  white-space: pre-wrap;
+}
+
 .beatdown-heading {
   font-size: 1rem;
   font-weight: 700;
