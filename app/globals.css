@@ -96,8 +96,33 @@ h2 {
 }
 
 .card h2 {
-  margin: 0 0 4px;
+margin: 0;
   font-size: 1.25rem;
+}
+
+.card-header-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.edit-link {
+  flex-shrink: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #666;
+  text-decoration: none;
+  border: 1px solid #ddd;
+  padding: 3px 12px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.edit-link:hover {
+  background: #f4f3ef;
+  color: #1c1c1c;
 }
 
 .meta {
@@ -115,7 +140,7 @@ h2 {
 }
 
 .q-badge {
-  display: inline-block;
+display: inline-block;
   background: #f6e2d4;
   color: #a5401a;
   font-weight: 700;
@@ -317,7 +342,11 @@ form {
 }
 
 .form-submit {
-  text-align: center;
+text-align: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
   margin-top: 8px;
 }
 
