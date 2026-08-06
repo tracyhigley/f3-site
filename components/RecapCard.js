@@ -51,8 +51,7 @@ export default function RecapCard({ recap: r, peopleMap }) {
         </p>
       )}
 
-      <Section label="Quick description of the beatdown, or a fun story or comment" text={r.intro} />
-      <h3 className="beatdown-heading">Beatdown</h3>
+{r.intro && <p className="intro-text">{r.intro}</p>}      <h3 className="beatdown-heading">Beatdown</h3>
       <Section label="Warmup" text={r.warmup} />
       <Section label="The Thang" text={r.thang} />
       <Section label="Mary" text={r.mary} />
