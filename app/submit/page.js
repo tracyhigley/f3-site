@@ -233,8 +233,8 @@ export default function SubmitRecap() {
 
           <div>
             <label>The Thang</label>
-            <textarea value={form.thang} onChange={(e) => update('thang', e.target.value)} />
-          </div>
+<textarea rows={15} value={form.thang} onChange={(e) => update('thang', e.target.value)} />
+            </div>
 
           <div>
             <label>Mary</label>
