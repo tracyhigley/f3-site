@@ -20,8 +20,8 @@ export default async function RecentBackblasts() {
       )}
 
       {recent.map((r) => (
-        <RecapCard key={r.id} recap={r} peopleMap={peopleMap} />
-      ))}
+<RecapCard key={r.id} recap={r} peopleMap={peopleMap} editable />
+        ))}
 
       {recaps.length > 10 && (
         <p className="archive-link">
