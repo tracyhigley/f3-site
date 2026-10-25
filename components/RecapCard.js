@@ -1,9 +1,13 @@
+import Link from 'next/link';
+import FormattedText from './FormattedText';
+import ShareLinkButton from './ShareLinkButton';
+
 function Section({ label, text }) {
   if (!text) return null;
   return (
     <div className="section">
       <h3>{label}</h3>
-      <p>{text}</p>
+      <FormattedText text={text} />
     </div>
   );
 }
@@ -20,23 +24,48 @@ function nickname(name) {
   return name.replace(/\s*\([^)]*\)\s*$/, '');
 }
 
-export default function RecapCard({ recap: r, peopleMap }) {
+export default function RecapCard({ recap: r, peopleMap, editable = false }) {
+  const paxNames = (r.pax_ids || []).map((id) => peopleMap[id]).filter(Boolean);
+
   return (
     <article className="card">
-      <h2>{r.title}</h2>
+      <div className="card-header-row">
+        <h2>
+          <Link href={`/backblast/${r.id}`} className="card-title-link">
+            {r.title}
+          </Link>
+        </h2>
+        <div className="card-actions">
+          <ShareLinkButton path={`/backblast/${r.id}`} title={r.title} />
+          {editable && (
+            <Link href={`/edit/${r.id}`} className="edit-link">
+              Edit
+            </Link>
+          )}
+        </div>
+      </div>
       <p className="meta">
-        {formatDate(r.date)} · Q: {nickname(peopleMap[r.q_id]) || 'Unknown'}
+        {formatDate(r.date)}
+        <span className="meta-dot">•</span>
+        Q <span className="q-badge">{nickname(peopleMap[r.q_id]) || 'Unknown'}</span>
       </p>
 
-      {r.photo_url && <img className="photo" src={r.photo_url} alt={r.title} />}
+      {r.photo_url && (
+        <Link href={`/backblast/${r.id}`}>
+          <img className="photo" src={r.photo_url} alt={r.title} />
+        </Link>
+      )}
 
-      <p>
-        <strong>PAX:</strong>{' '}
-        {(r.pax_ids || [])
-          .map((id) => peopleMap[id])
-          .filter(Boolean)
-          .join(', ') || '—'}
-      </p>
+      <p className="pax-label">PAX</p>
+      <div className="pax-list">
+        {paxNames.length > 0 ? (
+          paxNames.map((name, i) => (
+            <span className="pax-pill" key={`${name}-${i}`}>{nickname(name)}</span>
+          ))
+        ) : (
+          <span className="pax-pill">—</span>
+        )}
+      </div>
 
       {r.fngs && (
         <p>
@@ -44,7 +73,7 @@ export default function RecapCard({ recap: r, peopleMap }) {
         </p>
       )}
 
-      <Section label="Quick description of the beatdown, or a fun story or comment" text={r.intro} />
+      {r.intro && <p className="intro-text">{r.intro}</p>}
       <h3 className="beatdown-heading">Beatdown</h3>
       <Section label="Warmup" text={r.warmup} />
       <Section label="The Thang" text={r.thang} />

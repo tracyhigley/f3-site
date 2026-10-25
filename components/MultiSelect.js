@@ -2,9 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-// A simple dropdown that lets you check multiple options, instead of relying
-// on a native <select multiple> (which needs cmd/ctrl-click on desktop and is
-// awkward on some mobile browsers).
+// Pick several people from a dropdown: click a name to add it (no checkboxes).
+// Chosen names show as chips; click the × on a chip to remove that person.
 export default function MultiSelect({ options, selected, onChange, placeholder = 'Select...' }) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
@@ -24,26 +23,47 @@ export default function MultiSelect({ options, selected, onChange, placeholder =
   useEffect(() => {
     if (open) {
       setSearch('');
-      // Let the menu render before focusing.
       setTimeout(() => searchRef.current?.focus(), 0);
     }
   }, [open]);
 
-  function toggle(id) {
-    if (selected.includes(id)) {
-      onChange(selected.filter((x) => x !== id));
-    } else {
-      onChange([...selected, id]);
-    }
+  function add(id) {
+    if (!selected.includes(id)) onChange([...selected, id]);
+    setSearch('');
+    setTimeout(() => searchRef.current?.focus(), 0);
   }
 
-  const selectedLabels = options.filter((o) => selected.includes(o.id)).map((o) => o.name);
-  const filteredOptions = options.filter((o) => o.name.toLowerCase().includes(search.toLowerCase()));
+  function remove(id) {
+    onChange(selected.filter((x) => x !== id));
+  }
+
+  const selectedOptions = selected
+    .map((id) => options.find((o) => o.id === id))
+    .filter(Boolean);
+  const available = options.filter((o) => !selected.includes(o.id));
+  const filteredOptions = available.filter((o) => o.name.toLowerCase().includes(search.toLowerCase()));
 
   return (
     <div className="multiselect" ref={containerRef}>
+      {selectedOptions.length > 0 && (
+        <div className="multiselect-chips">
+          {selectedOptions.map((o) => (
+            <span key={o.id} className="multiselect-chip">
+              {o.name}
+              <button
+                type="button"
+                className="multiselect-chip-remove"
+                aria-label={`Remove ${o.name}`}
+                onClick={() => remove(o.id)}
+              >
+                ×
+              </button>
+            </span>
+          ))}
+        </div>
+      )}
       <button type="button" className="multiselect-trigger" onClick={() => setOpen((o) => !o)}>
-        <span>{selectedLabels.length ? selectedLabels.join(', ') : placeholder}</span>
+        <span>{selectedOptions.length ? `Add another (${selectedOptions.length} selected)` : placeholder}</span>
         <span className="multiselect-caret">▾</span>
       </button>
       {open && (
@@ -55,17 +75,28 @@ export default function MultiSelect({ options, selected, onChange, placeholder =
             placeholder="Type a name..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                if (filteredOptions[0]) add(filteredOptions[0].id);
+              } else if (e.key === 'Escape') {
+                setOpen(false);
+              }
+            }}
           />
           {filteredOptions.length === 0 && (
             <div className="multiselect-empty">
-              {options.length === 0 ? 'No one in the system yet.' : 'No matches.'}
+              {options.length === 0
+                ? 'No one in the system yet.'
+                : available.length === 0
+                ? 'Everyone has been added.'
+                : 'No matches.'}
             </div>
           )}
           {filteredOptions.map((o) => (
-            <label key={o.id} className="multiselect-option">
-              <input type="checkbox" checked={selected.includes(o.id)} onChange={() => toggle(o.id)} />
+            <button key={o.id} type="button" className="multiselect-option" onClick={() => add(o.id)}>
               {o.name}
-            </label>
+            </button>
           ))}
         </div>
       )}
