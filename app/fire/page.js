@@ -1,21 +1,15 @@
 import { supabase } from '../../lib/supabaseClient';
 import FireRsvp from '../../components/FireRsvp';
-import {
-  CURRENT_FIRE_DATE,
-  CURRENT_FIRE_TIME,
-  CURRENT_FIRE_LOCATION,
-  CURRENT_FIRE_ADDRESS,
-  CURRENT_FIRE_NOTES,
-  googleCalendarUrl,
-} from '../../lib/currentFire';
+import { getCurrentFire, googleCalendarUrl } from '../../lib/currentFire';
 
 export const dynamic = 'force-dynamic';
 
 export default async function Fire() {
+  const fire = await getCurrentFire();
   const { data: rsvps } = await supabase
     .from('fire_rsvps')
     .select('*')
-    .eq('fire_date', CURRENT_FIRE_DATE)
+    .eq('fire_date', fire.date)
     .order('created_at', { ascending: true });
 
   return (
@@ -54,33 +48,33 @@ export default async function Fire() {
 
           <div className="fire-detail">
             <span className="fire-detail-label">Date</span>
-            <span className="fire-detail-value">{CURRENT_FIRE_DATE}</span>
+            <span className="fire-detail-value">{fire.date}</span>
           </div>
           <div className="fire-detail">
             <span className="fire-detail-label">Time</span>
-            <span className="fire-detail-value">{CURRENT_FIRE_TIME}</span>
+            <span className="fire-detail-value">{fire.time}</span>
           </div>
           <div className="fire-detail">
             <span className="fire-detail-label">Location</span>
-            <span className="fire-detail-value">{CURRENT_FIRE_LOCATION}</span>
+            <span className="fire-detail-value">{fire.location}</span>
           </div>
-          {CURRENT_FIRE_ADDRESS && (
+          {fire.address && (
             <div className="fire-detail">
               <span className="fire-detail-label">Address</span>
-              <span className="fire-detail-value">{CURRENT_FIRE_ADDRESS}</span>
+              <span className="fire-detail-value">{fire.address}</span>
             </div>
           )}
-          {CURRENT_FIRE_NOTES && (
+          {fire.notes && (
             <div className="fire-detail">
               <span className="fire-detail-label">Notes</span>
-              <span className="fire-detail-value">{CURRENT_FIRE_NOTES}</span>
+              <span className="fire-detail-value">{fire.notes}</span>
             </div>
           )}
 
           <div className="fire-calendar-actions">
             <a
               className="btn btn-primary fire-calendar-btn"
-              href={googleCalendarUrl()}
+              href={googleCalendarUrl(fire)}
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -93,7 +87,7 @@ export default async function Fire() {
         </div>
 
         <div className="card rsvp-card">
-          <FireRsvp fireDate={CURRENT_FIRE_DATE} initialRsvps={rsvps || []} />
+          <FireRsvp fireDate={fire.date} initialRsvps={rsvps || []} />
         </div>
       </div>
     </main>
