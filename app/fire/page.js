@@ -22,6 +22,7 @@ export default async function Fire() {
       <div className="container">
         <p className="page-eyebrow">The Grill</p>
         <h1 className="page-title">Fire</h1>
+        <p>*</p>
 
         <p className="fire-intro">
           F3 Fires are a monthly Second and Third Fs (Fellowship &amp; Faith) gathering where
